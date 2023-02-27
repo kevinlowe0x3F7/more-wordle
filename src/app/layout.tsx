@@ -1,4 +1,9 @@
+"use client";
+
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import "../styles/globals.css";
+import { NavBar } from "./navBar";
+import { theme } from "./theme/themes";
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -9,7 +14,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <body>
+          <NavBar />
+          {children}
+        </body>
+      </ThemeProvider>
     </html>
   );
 }
