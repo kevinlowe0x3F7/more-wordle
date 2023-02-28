@@ -16,9 +16,11 @@ export default function RootLayout({
     <html lang="en">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <body>
+        <body className="bg-black text-white">
           <NavBar />
-          {children}
+          <main className="flex min-h-screen flex-col items-center justify-center">
+            {children}
+          </main>
         </body>
       </ThemeProvider>
     </html>
