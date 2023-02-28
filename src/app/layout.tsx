@@ -3,7 +3,7 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import "../styles/globals.css";
 import { NavBar } from "./navBar";
-import { theme } from "./theme/themes";
+import { darkTheme } from "./theme/themes";
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -14,9 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <body className="bg-black text-white">
+        <body>
           <NavBar />
           <main className="flex min-h-screen flex-col items-center justify-center">
             {children}
