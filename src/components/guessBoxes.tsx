@@ -4,16 +4,38 @@
 import { useStore } from "~/store/store";
 import * as React from "react";
 import clsx from "clsx";
+import { shallow } from "zustand/shallow";
 
 export const GuessBoxes: React.FC = () => {
-  const letters = useStore((state) => state.letters);
+  const {
+    letters,
+    guesses: currentGuesses,
+    stagedGuess: currentStagedGuess,
+  } = useStore((state) => {
+    return {
+      letters: state.letters,
+      guesses: state.guesses,
+      stagedGuess: state.stagedGuess,
+    };
+  }, shallow);
   const numGuesses = React.useMemo(() => Math.ceil(26 / letters), [letters]);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const boxes = [...Array(numGuesses)].flatMap((_, g) =>
-    [...Array(letters)].map((_, i) => (
-      <GuessBox key={`${g}:${i}`} letter={g % 2 === 0 ? "A" : undefined} />
-    ))
+    [...Array(letters)].map((_, i) => {
+      const letter =
+        g < currentGuesses.length
+          ? currentGuesses[g]?.charAt(i)
+          : g === currentGuesses.length
+          ? currentStagedGuess.charAt(i)
+          : undefined;
+      return (
+        <GuessBox
+          key={`${g}:${i}`}
+          letter={letter !== "" ? letter : undefined}
+        />
+      );
+    })
   );
   const classNames = clsx("grid gap-1", getGridColClassName(letters));
   return <div className={classNames}>{boxes}</div>;

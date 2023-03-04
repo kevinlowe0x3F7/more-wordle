@@ -3,4 +3,10 @@ export interface WordleState {
   letters: number;
   setStagedLetters: (stagedLetters: number) => void;
   setLetters: () => void;
+
+  stagedGuess: string;
+  guesses: string[];
+  addToStagedGuess: (letter: string) => void;
+  removeLastStagedGuess: () => void;
+  submitGuess: () => void;
 }
