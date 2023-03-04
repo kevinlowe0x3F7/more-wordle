@@ -1,6 +1,8 @@
 export type WordleState = LettersState;
 
 export interface LettersState {
+  stagedLetters: number;
   letters: number;
-  setLetters: (letters: number) => void;
+  setStagedLetters: (stagedLetters: number) => void;
+  setLetters: () => void;
 }

@@ -8,7 +8,7 @@ import { shallow } from "zustand/shallow";
 export const LetterCountButtons: React.FC = () => {
   const letterCounts = [3, 4, 5, 6, 7, 8];
   const [selectedLetters, setSelectedLetters] = useStore(
-    (state) => [state.letters, state.setLetters],
+    (state) => [state.stagedLetters, state.setStagedLetters],
     shallow
   );
 
