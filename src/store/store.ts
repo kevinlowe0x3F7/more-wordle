@@ -1,13 +1,9 @@
-import { create, type StateCreator } from "zustand";
-import { type WordleState, type LettersState } from "./state";
+import { create } from "zustand";
+import { type WordleState } from "./state";
 
-export const createLettersStore: StateCreator<LettersState> = (set) => ({
+export const useStore = create<WordleState>()((set) => ({
   stagedLetters: 5,
   letters: 5,
   setStagedLetters: (stagedLetters: number) => set(() => ({ stagedLetters })),
   setLetters: () => set((state) => ({ letters: state.stagedLetters })),
-});
-
-export const useStore = create<WordleState>()((...params) => ({
-  ...createLettersStore(...params),
 }));
