@@ -11,14 +11,43 @@ export const GuessBoxes: React.FC = () => {
     letters,
     guesses: currentGuesses,
     stagedGuess: currentStagedGuess,
+    addToStagedGuess,
+    removeLastStagedGuess,
+    submitGuess,
   } = useStore((state) => {
     return {
       letters: state.letters,
       guesses: state.guesses,
       stagedGuess: state.stagedGuess,
+      addToStagedGuess: state.addToStagedGuess,
+      removeLastStagedGuess: state.removeLastStagedGuess,
+      submitGuess: state.submitGuess,
     };
   }, shallow);
   const numGuesses = React.useMemo(() => Math.ceil(26 / letters), [letters]);
+
+  React.useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
+        return;
+      }
+
+      if (e.key === "Backspace") {
+        removeLastStagedGuess();
+      } else if (e.key === "Enter") {
+        submitGuess();
+      } else {
+        addToStagedGuess(e.key);
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Don't forget to clean up
+    return function cleanup() {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [addToStagedGuess, removeLastStagedGuess, submitGuess]);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const boxes = [...Array(numGuesses)].flatMap((_, g) =>

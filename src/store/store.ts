@@ -10,7 +10,7 @@ export const useStore = create<WordleState>()((set) => ({
   stagedGuess: "",
   guesses: [],
   addToStagedGuess: (letter: string) => set((state) => {
-    if (letter.length !== 1 || !letter.match("[a-zA-Z]")) {
+    if (letter.length !== 1 || !letter.match("[a-zA-Z]") || state.stagedGuess.length === state.letters) {
       return state;
     }
 
