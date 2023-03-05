@@ -9,4 +9,6 @@ export interface WordleState {
   addToStagedGuess: (letter: string) => void;
   removeLastStagedGuess: () => void;
   submitGuess: () => void;
+
+  answer: string;
 }

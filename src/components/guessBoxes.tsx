@@ -5,6 +5,7 @@ import { useStore } from "~/store/store";
 import * as React from "react";
 import clsx from "clsx";
 import { shallow } from "zustand/shallow";
+import { calculateGuessColoring, GuessColoring } from "~/utils/guesses";
 
 export const GuessBoxes: React.FC = () => {
   const {
@@ -14,6 +15,7 @@ export const GuessBoxes: React.FC = () => {
     addToStagedGuess,
     removeLastStagedGuess,
     submitGuess,
+    answer,
   } = useStore((state) => {
     return {
       letters: state.letters,
@@ -22,6 +24,7 @@ export const GuessBoxes: React.FC = () => {
       addToStagedGuess: state.addToStagedGuess,
       removeLastStagedGuess: state.removeLastStagedGuess,
       submitGuess: state.submitGuess,
+      answer: state.answer,
     };
   }, shallow);
   const numGuesses = React.useMemo(() => Math.ceil(26 / letters), [letters]);
@@ -50,8 +53,10 @@ export const GuessBoxes: React.FC = () => {
   }, [addToStagedGuess, removeLastStagedGuess, submitGuess]);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const boxes = [...Array(numGuesses)].flatMap((_, g) =>
-    [...Array(letters)].map((_, i) => {
+  const boxes = [...Array(numGuesses)].flatMap((_, g) => {
+    const guess = currentGuesses[g];
+    const guessColoring = calculateGuessColoring(guess ?? "", answer);
+    return [...Array(letters)].map((_, i) => {
       const letter =
         g < currentGuesses.length
           ? currentGuesses[g]?.charAt(i)
@@ -61,19 +66,27 @@ export const GuessBoxes: React.FC = () => {
       return (
         <GuessBox
           key={`${g}:${i}`}
+          guessColoring={guessColoring[i] ?? "not-present"}
           letter={letter !== "" ? letter : undefined}
         />
       );
-    })
-  );
+    });
+  });
   const classNames = clsx("grid gap-1", getGridColClassName(letters));
   return <div className={classNames}>{boxes}</div>;
 };
 
-const GuessBox: React.FC<{ letter: string | undefined }> = ({ letter }) => {
+const GuessBox: React.FC<{
+  letter: string | undefined;
+  guessColoring: GuessColoring;
+}> = ({ letter, guessColoring }) => {
   const classNames = clsx(
     "flex items-center justify-center h-10 w-10 sm:w-16 sm:h-16 border-2 text-3xl font-bold",
-    { "border-gray-600": letter == null, "border-gray-200": letter != null }
+    { "border-gray-600": letter == null, "border-gray-200": letter != null },
+    {
+      "bg-green-800": guessColoring === "correct",
+      "bg-yellow-500": guessColoring === "wrong-location",
+    }
   );
   return <div className={classNames}>{letter}</div>;
 };

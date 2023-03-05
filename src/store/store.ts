@@ -24,4 +24,6 @@ export const useStore = create<WordleState>()((set) => ({
 
     return ({ stagedGuess: "", guesses: [...state.guesses, state.stagedGuess]});
   }),
+
+  answer: "AUDIO",
 }));

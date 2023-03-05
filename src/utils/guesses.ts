@@ -1,7 +1,8 @@
 export type GuessColoring = "not-present" | "correct" | "wrong-location";
 
-export function calculateGuessColoring(guess: string, answer: string) {
+export function calculateGuessColoring(guess: string, answer: string): GuessColoring[] {
   if (guess.length !== answer.length) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return [...guess].map(_char => "not-present");
   }
 
