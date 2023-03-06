@@ -93,7 +93,8 @@ const GuessBox: React.FC<{
           {
             "border-gray-600": letter == null,
             "border-gray-200": letter != null,
-          }
+          },
+          getTransitionDelayClassName(guessIndex)
         )}
       >
         <div
@@ -138,6 +139,33 @@ function getGridColClassName(letters: number) {
       return "grid-cols-7";
     case 8:
       return "grid-cols-8";
+    default:
+      return "";
+  }
+}
+
+/**
+ * Tailwind needs the whole classname to make sure the css is grabbed
+ * https://tailwindcss.com/docs/content-configuration#dynamic-class-names
+ */
+function getTransitionDelayClassName(letterIndex: number) {
+  switch (letterIndex) {
+    case 0:
+      return "";
+    case 1:
+      return "delay-[150ms]";
+    case 2:
+      return "delay-[300ms]";
+    case 3:
+      return "delay-[450ms]";
+    case 4:
+      return "delay-[600ms]";
+    case 5:
+      return "delay-[750ms]";
+    case 6:
+      return "delay-[900ms]";
+    case 7:
+      return "delay-[1050ms]";
     default:
       return "";
   }
