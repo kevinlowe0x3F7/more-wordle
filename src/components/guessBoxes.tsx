@@ -5,7 +5,7 @@ import { useStore } from "~/store/store";
 import * as React from "react";
 import clsx from "clsx";
 import { shallow } from "zustand/shallow";
-import { calculateGuessColoring, GuessColoring } from "~/utils/guesses";
+import { calculateGuessColoring, type GuessColoring } from "~/utils/guesses";
 
 export const GuessBoxes: React.FC = () => {
   const {
@@ -66,7 +66,9 @@ export const GuessBoxes: React.FC = () => {
       return (
         <GuessBox
           key={`${g}:${i}`}
-          guessColoring={guessColoring[i] ?? "not-present"}
+          guessIndex={i}
+          isSubmittedGuess={g < currentGuesses.length}
+          guessColoring={guessColoring[i] ?? "absent"}
           letter={letter !== "" ? letter : undefined}
         />
       );
@@ -77,18 +79,45 @@ export const GuessBoxes: React.FC = () => {
 };
 
 const GuessBox: React.FC<{
+  isSubmittedGuess: boolean;
   letter: string | undefined;
   guessColoring: GuessColoring;
-}> = ({ letter, guessColoring }) => {
-  const classNames = clsx(
-    "flex items-center justify-center h-10 w-10 sm:w-16 sm:h-16 border-2 text-3xl font-bold",
-    { "border-gray-600": letter == null, "border-gray-200": letter != null },
-    {
-      "bg-green-800": guessColoring === "correct",
-      "bg-yellow-500": guessColoring === "wrong-location",
-    }
+  guessIndex: number;
+}> = ({ isSubmittedGuess, letter, guessIndex, guessColoring }) => {
+  return (
+    <div className="h-10 w-10 [perspective:1000px] sm:h-16 sm:w-16">
+      <div
+        className={clsx(
+          "relative h-full w-full border-2 text-3xl font-bold transition-transform duration-1000 [transform-style:preserve-3d]",
+          { "[transform:rotateX(180deg)]": isSubmittedGuess },
+          {
+            "border-gray-600": letter == null,
+            "border-gray-200": letter != null,
+          }
+        )}
+      >
+        <div
+          className={clsx(
+            "absolute flex h-full w-full items-center justify-center [backface-visibility:hidden]"
+          )}
+        >
+          {letter}
+        </div>
+        <div
+          className={clsx(
+            "absolute flex h-full w-full items-center justify-center [backface-visibility:hidden]",
+            { "[transform:rotateX(180deg)]": isSubmittedGuess },
+            {
+              "bg-green-800": isSubmittedGuess && guessColoring === "correct",
+              "bg-yellow-500": isSubmittedGuess && guessColoring === "present",
+            }
+          )}
+        >
+          {letter}
+        </div>
+      </div>
+    </div>
   );
-  return <div className={classNames}>{letter}</div>;
 };
 
 /**
