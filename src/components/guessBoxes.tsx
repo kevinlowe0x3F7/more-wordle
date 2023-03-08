@@ -38,6 +38,7 @@ export const GuessBoxes: React.FC = () => {
       if (e.key === "Backspace") {
         removeLastStagedGuess();
       } else if (e.key === "Enter") {
+        e.preventDefault();
         submitGuess();
       } else {
         addToStagedGuess(e.key);
@@ -65,7 +66,7 @@ export const GuessBoxes: React.FC = () => {
           : undefined;
       return (
         <GuessBox
-          key={`${g}:${i}`}
+          key={`${g}:${i}:${letters}`}
           guessIndex={i}
           isSubmittedGuess={g < currentGuesses.length}
           guessColoring={guessColoring[i] ?? "absent"}

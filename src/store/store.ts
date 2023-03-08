@@ -1,11 +1,12 @@
+import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { type WordleState } from "./state";
 
-export const useStore = create<WordleState>()((set) => ({
+export const useStore = create<WordleState>()((set, get) => ({
   stagedLetters: 5,
   letters: 5,
   setStagedLetters: (stagedLetters: number) => set(() => ({ stagedLetters })),
-  setLetters: () => set((state) => ({ letters: state.stagedLetters })),
+  setLetters: () => set((state) => ({ letters: state.stagedLetters, stagedGuess: "", guesses: [], answer: "A".repeat(state.stagedLetters), })),
 
   stagedGuess: "",
   guesses: [],
@@ -17,13 +18,21 @@ export const useStore = create<WordleState>()((set) => ({
     return ({ stagedGuess: state.stagedGuess + letter.toLocaleUpperCase()})
   }),
   removeLastStagedGuess: () => set((state) => ({ stagedGuess: state.stagedGuess.substring(0, state.stagedGuess.length - 1)})),
-  submitGuess: () => set((state) => {
-    if (state.stagedGuess.length !== state.letters) {
-      return state;
+  submitGuess: () => {
+    const { stagedGuess, letters, guesses } = get();
+    /*
+    if (stagedGuess.length !== letters) {
+      return;
     }
+    */
+    console.log("submitting guess", guesses, stagedGuess, letters);
 
-    return ({ stagedGuess: "", guesses: [...state.guesses, state.stagedGuess]});
-  }),
+    set(() => ({ stagedGuess: "", guesses: [...guesses, stagedGuess]}));
+  },
 
-  answer: "AUDIO",
+  answer: "AAAAA",
 }));
+
+if (process.env.NODE_ENV === "development") {
+  mountStoreDevtool("WordleStore", useStore);
+}
