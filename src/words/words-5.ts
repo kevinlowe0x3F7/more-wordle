@@ -1,4 +1,4 @@
-export const FIVE_LETTER_ANSWERS = [
+export const FIVE_LETTER_WORDS = [
     "aback",
     "abaft",
     "abase",
