@@ -6,15 +6,18 @@ export function calculateGuessColoring(guess: string, answer: string): GuessColo
     return [...guess].map(_char => "absent");
   }
 
+  const lettersLeft = new Set();
   const coloringsMap = new Map<number, GuessColoring>();
   for (let i = 0; i < guess.length; i++) {
     if (guess.charAt(i) === answer.charAt(i)) {
       coloringsMap.set(i, "correct");
+    } else {
+      lettersLeft.add(answer.charAt(i));
     }
   }
 
   for (let i = 0; i < guess.length; i++) {
-    if (answer.indexOf(guess.charAt(i)) !== -1 && !coloringsMap.has(i)) {
+    if (lettersLeft.has(guess.charAt(i))) {
       coloringsMap.set(i, "present");
     } 
   }
